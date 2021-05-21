@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Подробное описание номера отеля</title>
+</head>
+<body>
+        <h1>{{ room }}</h1>
+        Вмещает людей: {{ room.number_of_people }}<br><br>
+        Площадь: {{ room.room_area }}<br><br>
+        Люкс: {{ room.is_lux }}<br><br>
+        Цена: {{ room.price }} USD<br><br>
+        Описание: {{ room.description }}<br><br>
+        <i>Забронировано: {{ room.is_booked }}</i><br><br>
+        <i>Бронь с: {{ room.booked_from }} по:{{ room.booked_to }}</i>
+</body>
+</html>
