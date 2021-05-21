@@ -2,9 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Отель</title>
 </head>
-<body>
-    <h1>Hello, this is main page Hotel</h1>
+<p>
+    <h1>Все номера отеля</h1>
+    {% for room in all_rooms %}
+        {{ room }}<br>
+        Вмещает людей: {{ room.number_of_people }}<br>
+        Площадь: {{ room.room_area }}<br>
+        Люкс: {{ room.is_lux }}<br>
+        Цена: {{ room.price }} USD<br>
+        <i>Забронировано: {{ room.is_booked }}</i>><br>
+        <hr>
+    {% endfor %}
 </body>
 </html>

@@ -15,4 +15,4 @@ class Room(models.Model):
     booked_person = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return self.number
+        return f'Номер {self.number}'
