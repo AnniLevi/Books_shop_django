@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Room(models.Model):
@@ -10,9 +11,26 @@ class Room(models.Model):
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
     price = models.FloatField(null=False, verbose_name='Цена')
     is_booked = models.BooleanField(default=False, verbose_name='Забронировано')
-    booked_from = models.DateField(null=True, blank=True)
-    booked_to = models.DateField(null=True, blank=True)
-    booked_person = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f'Номер {self.number}'
+
+
+class Rating(models.Model):
+    service_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+                                          verbose_name='Качество обслуживания')
+    cleanness = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+                                    verbose_name='Чистота')
+    friendliness_of_staff = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+                                                verbose_name='Приветливость персонала')
+    rating_person = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+
+
+class Booking(models.Model):
+    room_number = models.ForeignKey(Room, null=True, blank=True, on_delete=models.SET_NULL)
+    date_from = models.DateField(null=True, blank=True)
+    date_to = models.DateField(null=True, blank=True)
+    booked_person = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    description = models.TextField(null=True, blank=True)
+
+
