@@ -23,14 +23,16 @@ class Rating(models.Model):
                                     verbose_name='Чистота')
     friendliness_of_staff = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
                                                 verbose_name='Приветливость персонала')
-    rating_person = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    rating_person = models.OneToOneField(User, null=True, on_delete=models.SET_NULL, related_name='ratings')
 
 
 class Booking(models.Model):
-    room_number = models.ForeignKey(Room, null=True, blank=True, on_delete=models.SET_NULL)
+    room_number = models.ForeignKey(Room, null=True, blank=True,
+                                    on_delete=models.SET_NULL, related_name='booking_room')
     date_from = models.DateField(null=True, blank=True)
     date_to = models.DateField(null=True, blank=True)
-    booked_person = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    booked_person = models.ForeignKey(User, null=True, blank=True,
+                                      on_delete=models.SET_NULL, related_name='booking_user')
     description = models.TextField(null=True, blank=True)
 
 
