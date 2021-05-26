@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Отзывы об отеле</title>
+</head>
+<body>
+    <form action="{% url 'add-rating' %}" method="POST">
+    {% csrf_token %}
+        <h1>Оставить отзыв</h1>
+        <p>
+            <label for="service_quality">Качество обслуживания: </label>
+            <select size="1" name="service_quality">
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
+        </p>
+        <p>
+            <label for="friendliness_of_staff">Чистота: </label>
+            <select size="1" name="cleanness">
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
+        </p>
+        <p>
+            <label for="friendliness_of_staff">Приветливость персонала: </label>
+            <select size="1" name="friendliness_of_staff">
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
+        </p>
+        <input type="submit" value="Отправить">
+    </form>
+</body>
+</html>

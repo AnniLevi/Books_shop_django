@@ -5,17 +5,20 @@
     <title>Отель</title>
 </head>
 <p>
-    <h1>Все номера отеля</h1>
-    {% now "d-M-Y" %}<br>
+    <h1>Отель</h1>
+    <a href="{% url 'hotel-rating' %}"> Оставить отзыв об отеле</a><br><br>
+
+    <h3>Все номера отеля</h3>
     {% for room in all_rooms %}
         <a href="{% url 'room-detail' room_id=room.number %}">{{ room }}</a><br>
         Вмещает людей: {{ room.number_of_people }}<br>
         Площадь: {{ room.room_area }} кв.м.<br>
         Люкс: {{ room.is_lux }}<br>
         Цена: {{ room.price }} USD<br>
-
         <hr>
     {% endfor %}
+
+
 </body>
 </html>
 
