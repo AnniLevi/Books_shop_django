@@ -10,7 +10,6 @@ class Room(models.Model):
     is_lux = models.BooleanField(default=False, verbose_name='Люкс')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
     price = models.FloatField(null=False, verbose_name='Цена')
-    is_booked = models.BooleanField(default=False, verbose_name='Забронировано')
 
     def __str__(self):
         return f'Номер {self.number}'

@@ -6,13 +6,14 @@
 </head>
 <p>
     <h1>Все номера отеля</h1>
+    {% now "d-M-Y" %}<br>
     {% for room in all_rooms %}
         <a href="{% url 'room-detail' room_id=room.number %}">{{ room }}</a><br>
         Вмещает людей: {{ room.number_of_people }}<br>
         Площадь: {{ room.room_area }} кв.м.<br>
         Люкс: {{ room.is_lux }}<br>
         Цена: {{ room.price }} USD<br>
-        <i>Забронировано: {{ room.is_booked }}</i><br>
+
         <hr>
     {% endfor %}
 </body>
