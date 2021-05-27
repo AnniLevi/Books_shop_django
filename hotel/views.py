@@ -34,14 +34,14 @@ def rating_page(request):
     return render(request, 'hotel/ratings.html')
 
 
+
 @login_required
 def add_rating(request):
-    # Rating.objects.get(rating_person=request.user.id)
-    new_rating = Rating(
-        service_quality=request.POST['service_quality'],
-        cleanness=request.POST['cleanness'],
-        friendliness_of_staff=request.POST['friendliness_of_staff'],
-        rating_person=request.user
+    Rating.objects.update_or_create(
+        rating_person_id=request.user.id,
+        defaults={'service_quality': request.POST['service_quality'],
+                  'cleanness': request.POST['cleanness'],
+                  'friendliness_of_staff': request.POST['friendliness_of_staff']
+                  }
     )
-    new_rating.save()
     return redirect('hotel-page')
