@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Avg
 from django.shortcuts import render, redirect
 from hotel.models import Room, Booking, Rating
 
@@ -25,13 +26,25 @@ def booking_the_room(request, room_id):
         booked_person=request.user,
         description=request.POST['description']
     )
-    room.is_booked = True
-    room.save()
     return redirect('hotel-page')
 
 
 def rating_page(request):
-    return render(request, 'hotel/ratings.html')
+    context = Rating.objects.all().aggregate(
+        avg_service_quality=Avg('service_quality'),
+        avg_cleanness=Avg('cleanness'),
+        avg_friendliness_of_staff=Avg('friendliness_of_staff'),
+        avg_equipment_quality=Avg('equipment_quality'),
+        avg_food_quality=Avg('food_quality'),
+        avg_location=Avg('location'),
+        avg_territory_condition=Avg('territory_condition'),
+    )
+    s = 0
+    for value in context.values():
+        s += float(value)
+    avg_all = s / 7
+    context['avg_all'] = avg_all
+    return render(request, 'hotel/ratings.html', context=context)
 
 
 
@@ -41,7 +54,11 @@ def add_rating(request):
         rating_person_id=request.user.id,
         defaults={'service_quality': request.POST['service_quality'],
                   'cleanness': request.POST['cleanness'],
-                  'friendliness_of_staff': request.POST['friendliness_of_staff']
+                  'friendliness_of_staff': request.POST['friendliness_of_staff'],
+                  'equipment_quality': request.POST['equipment_quality'],
+                  'food_quality': request.POST['food_quality'],
+                  'location': request.POST['location'],
+                  'territory_condition': request.POST['territory_condition'],
                   }
     )
-    return redirect('hotel-page')
+    return redirect('hotel-rating')

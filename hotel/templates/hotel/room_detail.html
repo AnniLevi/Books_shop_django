@@ -7,25 +7,14 @@
 </head>
 <body>
 <div class="container">
+    <a href="{% url 'hotel-page' %}">На главную отеля</a>
     <h1>{{ room }}</h1>
     <p>Вмещает людей: {{ room.number_of_people }}<br>
     Площадь: {{ room.room_area }}<br>
     Люкс: {{ room.is_lux }}<br>
     Цена: {{ room.price }} USD<br>
     Описание: {{ room.description }}</p>
-    <hr>
-    <p><b>Отзывы клиентов</b></p>
-    <p>Средняя оценка по категориям:<br>
-    Качество обслуживания<br>
-    Чистота<br>
-    Приветливость персонала<br>
-    Качество оборудования<br>
-    Качество еды<br>
-    Расположение<br>
-    Состояние прилегающей территории<br>
-    </p>
 
-    <hr>
     <p><b>Актуальные брони </b></p>
     <p>
         {% for booking in room.booking_room.all %}
@@ -38,12 +27,12 @@
         <p><b>Бронирование</b></p>
         <p>
             <label for="date_from">Дата с:</label>
-            <input type="date" name="date_from" id="date_from">
+            <input type="date" name="date_from" id="date_from" required>
         </p>
 
         <p>
             <label for="date_to">Дата по:</label>
-            <input type="date" name="date_to" id="date_to">
+            <input type="date" name="date_to" id="date_to" required>
         </p>
 
         <p>
