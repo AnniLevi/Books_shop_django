@@ -5,36 +5,34 @@ from django.views.decorators.http import require_http_methods
 
 from sales_manager.models import Book, Comment
 from django.views import View
-from django.db.models import Count, Prefetch
+
+from sales_manager.utils import get_books_with_comment
 
 
 def main_page(request):
-    comment_query = Comment.objects.all().select_related('user').annotate(count_likes=Count('like'))
-    comment_prefetch = Prefetch('comments', queryset=comment_query)
-    query_set = Book.objects.all().select_related('author').\
-        prefetch_related(comment_prefetch).annotate(count_likes=Count('likes'))
+    query_set = get_books_with_comment()
     context = {'books': query_set}
     return render(request, 'sales_manager/index.html', context=context)
 
 
 def book_detail(request, book_id):
-    comment_query = Comment.objects.all().select_related('user').annotate(count_likes=Count('like'))
-    comment_prefetch = Prefetch('comments', queryset=comment_query)
-    query_set = Book.objects.all().select_related('author'). \
-        prefetch_related(comment_prefetch).annotate(count_likes=Count('likes'))
+    query_set = get_books_with_comment()
     book = query_set.get(id=book_id)
     context = {'book': book}
     return render(request, 'sales_manager/book_detail.html', context=context)
 
 
 @login_required()
-def book_like(request, book_id):
+def book_like(request, book_id, redirect_url):
     book = Book.objects.get(id=book_id)
     if request.user in book.likes.all():
         book.likes.remove(request.user)
     else:
         book.likes.add(request.user)
-    return redirect('main-page')
+    if redirect_url == 'main-page':
+        return redirect('main-page')
+    elif redirect_url == 'book-detail':
+        return redirect('book-detail', book_id=book_id)
 
 
 class LoginView(View):
@@ -57,13 +55,14 @@ def logout_view(request):
     logout(request)
     return redirect('main-page')
 
+
 @login_required()
 @require_http_methods(['POST'])
 def add_comment(request, book_id):
     text = request.POST.get('text')
     Comment.objects.create(
         text=text,
-        user=request.user,
+        user_id=request.user.id,
         book_id=book_id
     )
     return redirect('book-detail', book_id=book_id)

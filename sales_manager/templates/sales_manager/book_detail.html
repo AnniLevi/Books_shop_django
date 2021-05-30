@@ -1,26 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container">
-  <h1>Book detail page</h1>
-    {{ book.title }}<br>
-    {{ book.text }} <br>
-    {{ book.count_likes }}
-    <i>{{ book.author }}</i><br>
-    {{ book.date_publish|date:"d-m-Y" }} <br><br>
-        {% for comment in book.comments.all %}
-            <p>{{ comment.text }}</p>
-            <p>Date: {{ comment.date|date:"d-m-Y H:i:s" }}</p>
-            <p>Author: {{ comment.user.username }}</p>
-            <p>Likes: {{ comment.count_likes }}</p>
-        {% endfor %}
-        <br>
+{% extends 'sales_manager/main.html' %}
 
+{% block title %}Book Detail{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Book detail</h1>
+    {% include 'sales_manager/book_view.html' with book=book with_comment=True redirect_url='book-detail' %}
+    <hr>
     <form action="{% url 'add-comment' book_id=book.id %}" method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -30,5 +16,4 @@
         <button type="submit" class="btn btn-warning">OK</button>
     </form>
 </div>
-</body>
-</html>
+{% endblock %}
