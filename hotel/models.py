@@ -36,8 +36,8 @@ class Rating(models.Model):
 class Booking(models.Model):
     room_number = models.ForeignKey(Room, null=True, blank=True,
                                     on_delete=models.SET_NULL, related_name='booking_room')
-    date_from = models.DateField(null=True, blank=True)
-    date_to = models.DateField(null=True, blank=True)
+    date_from = models.DateField()
+    date_to = models.DateField()
     booked_person = models.ForeignKey(User, null=True, blank=True,
-                                      on_delete=models.SET_NULL, related_name='booking_user')
+                                      on_delete=models.CASCADE, related_name='booking_user')
     description = models.TextField(null=True, blank=True)

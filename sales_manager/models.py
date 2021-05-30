@@ -28,11 +28,12 @@ class UserRateBook(models.Model):
     class Meta:
         unique_together = ('user', 'book')
     user = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=4)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rated_user')
     rate = models.PositiveSmallIntegerField(
         default=0,
         validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
+
 
 class Comment(models.Model):
     text = models.TextField()

@@ -12,7 +12,7 @@ class BookInline(admin.ModelAdmin):
     # readonly_fields = ('likes', )
     list_filter = ('date_publish', )
     # list_editable = ('title', )
-    # list_display = ('title', 'text', )
+    list_display = ('title', 'text', )
     # list_display_links = ('text', )
 
 
