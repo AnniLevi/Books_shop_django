@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sales_manager',
     'hotel',
-    'debug_toolbar'
+    # 'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'books_shop.urls'
@@ -111,7 +111,7 @@ LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Europe/Minsk'
 
-DATE_FORMAT = 'Y-m-d'
+DATE_FORMAT = 'd.m.Y'
 
 USE_I18N = True
 

@@ -7,18 +7,19 @@
 </head>
 <body>
 <div class="container">
-    <a href="{% url 'hotel-page' %}">На главную отеля</a>
+    <a href="{% url 'filter-room' %}">Поиск номеров</a>
     <h1>{{ room }}</h1>
     <p>Вмещает людей: {{ room.number_of_people }}<br>
     Площадь: {{ room.room_area }}<br>
     Люкс: {{ room.is_lux }}<br>
     Цена: {{ room.price }} USD<br>
-    Описание: {{ room.description }}</p>
+    Описание: <br>
+        {{ room.description }}</p>
 
     <p><b>Актуальные брони </b></p>
     <p>
         {% for booking in room.booking_room.all %}
-        <i>с {{ booking.date_from|date:"d-M-Y" }}  по {{ booking.date_to|date:"d-M-Y" }}</i><br>
+        <i>с {{ booking.date_from|date:"d.M.Y" }}  по {{ booking.date_to|date:"d.M.Y" }}</i><br>
         {% endfor %}
     </p>
     <hr>
@@ -37,8 +38,7 @@
 
         <p>
             <label for="description">Описание бронирования: </label><br/>
-            <textarea name="description" id="description" placeholder="Не более 200 символов"
-                      maxlength="200"></textarea>
+            <textarea name="description" id="description" placeholder="Введите текст"></textarea>
         </p>
 
         <input type="submit" value="Забронировать">

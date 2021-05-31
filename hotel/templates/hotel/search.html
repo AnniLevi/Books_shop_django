@@ -13,13 +13,11 @@
 {% else %}
     <a href="{% url 'login' %}">login</a>
 {% endif %}
-    <h1>Отель</h1>
     <a href="{% url 'hotel-rating' %}"> Отзывы об отеле</a><br><br>
 
-    <h3>Все номера отеля</h3>
-    {% for room in all_rooms %}
+    <h3>Свободные номера отеля</h3>
+    {% for room in rooms %}
         <a href="{% url 'room-detail' room_id=room.number %}">{{ room }}</a><br>
-        Вмещает людей: {{ room.number_of_people }}<br>
         Площадь: {{ room.room_area }} кв.м.<br>
         Люкс: {{ room.is_lux }}<br>
         Цена: {{ room.price }} USD<br>

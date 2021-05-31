@@ -1,13 +1,30 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg
 from django.shortcuts import render, redirect
-from hotel.models import Room, Booking, Rating
+from hotel.models import Room, Booking, Rating, RoomType
+from datetime import datetime
+from django.views.decorators.http import require_http_methods
+from django.db.models import Q
 
 
-def hotel_page(request):
-    query_set = Room.objects.all()
-    context = {'all_rooms': query_set}
-    return render(request, 'hotel/index.html', context=context)
+def filter_room(request):
+    room_type = RoomType.objects.all()
+    return render(request, 'hotel/filter_form.html', {'room_types': room_type})
+
+
+def search_room(request):
+    start_date = datetime.strptime(request.GET['date_from'], '%Y-%m-%d')
+    end_date = datetime.strptime(request.GET['date_to'], '%Y-%m-%d')
+    room_type = request.GET['room_type']
+    booked_rooms = Booking.objects.filter(
+        Q(date_from__gte=start_date, date_to__lte=end_date) |
+        Q(date_from__lte=start_date, date_to__gte=end_date) |
+        Q(date_from__gte=start_date, date_from__lte=end_date, date_to__gte=end_date) |
+        Q(date_to__gte=start_date, date_to__lte=end_date, date_from__lte=end_date)
+    )
+    rooms = Room.objects.filter(room_type=room_type).exclude(booked__in=booked_rooms)
+    # rooms = Room.objects.filter(Q(room_type=room_type) & ~Q(booked__in=booked_rooms))
+    return render(request, 'hotel/search.html', {'rooms': rooms})
 
 
 def room_detail(request, room_id):
@@ -17,16 +34,16 @@ def room_detail(request, room_id):
 
 
 @login_required
+@require_http_methods(['POST'])
 def booking_the_room(request, room_id):
-    room = Room.objects.get(number=room_id)
     Booking.objects.create(
-        room_number=room,
+        room_id=room_id,
         date_from=request.POST['date_from'],
         date_to=request.POST['date_to'],
         booked_person=request.user,
         description=request.POST['description']
     )
-    return redirect('hotel-page')
+    return redirect('filter-room')
 
 
 def rating_page(request):
@@ -45,7 +62,6 @@ def rating_page(request):
     avg_all = s / 7
     context['avg_all'] = avg_all
     return render(request, 'hotel/ratings.html', context=context)
-
 
 
 @login_required
