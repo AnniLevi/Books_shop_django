@@ -15,32 +15,65 @@ class Room(models.Model):
     def __str__(self):
         return f'Номер {self.number}'
 
+    class Meta:
+        verbose_name = 'Номер'
+        verbose_name_plural = 'Номера'
+
 
 class RoomType(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Тип номера'
+        verbose_name_plural = 'Типы номеров'
+
 
 class Booking(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='booked', default=1)
-    date_from = models.DateField()
-    date_to = models.DateField()
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='booked', default=1, verbose_name='Номер')
+    date_from = models.DateField(verbose_name='Дата заезда')
+    date_to = models.DateField(verbose_name='Дата отъезда')
     booked_person = models.ForeignKey(User, null=True, blank=True,
-                                      on_delete=models.CASCADE, related_name='booked')
-    description = models.TextField(null=True, blank=True)
+                                      on_delete=models.CASCADE, related_name='booked', verbose_name='Клиент')
+    description = models.TextField(null=True, blank=True, verbose_name='Описание')
+
+    def __str__(self):
+        return f'Бронь {self.id}'
+
+    class Meta:
+        verbose_name = 'Бронирование'
+        verbose_name_plural = 'Бронирование'
 
 
 class Rent(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='rented')
-    start_date = models.DateField()
-    end_date = models.DateField()
-    renter = models.ManyToManyField(User, related_name='rented')
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='rented', verbose_name='Номер')
+    start_date = models.DateField(verbose_name='Дата заезда')
+    end_date = models.DateField(verbose_name='Дата отъезда')
+    renter = models.ManyToManyField(User, related_name='rented', verbose_name='Клиент')
+
+    def __str__(self):
+        return f'Аренда {self.id}'
+
+    class Meta:
+        verbose_name = 'Проживание'
+        verbose_name_plural = 'Проживание'
 
 
 class RenterMessage(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
-    renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
-    text = models.TextField()
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+    rent = models.ForeignKey(Rent, on_delete=models.CASCADE, related_name='messages')
+    # renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages', verbose_name='Клиент')
+    # room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages', verbose_name='Номер')
+    text = models.TextField(verbose_name='Текст')
+
+    def __str__(self):
+        return f'Сообщение {self.id}'
+
+    class Meta:
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
 
 
 class Rating(models.Model):
