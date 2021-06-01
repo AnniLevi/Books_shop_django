@@ -29,6 +29,20 @@ class Booking(models.Model):
     description = models.TextField(null=True, blank=True)
 
 
+class Rent(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='rented')
+    start_date = models.DateField()
+    end_date = models.DateField()
+    renter = models.ManyToManyField(User, related_name='rented')
+
+
+class RenterMessage(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
+    text = models.TextField()
+
+
 class Rating(models.Model):
     service_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
                                           verbose_name='Качество обслуживания')
