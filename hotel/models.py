@@ -5,12 +5,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Room(models.Model):
     number = models.IntegerField(primary_key=True, verbose_name='Номер')
-    room_type = models.ForeignKey('RoomType', on_delete=models.CASCADE, default=None)
+    room_type = models.ForeignKey('RoomType', on_delete=models.CASCADE, default=None, verbose_name='Тип')
     room_area = models.FloatField(verbose_name='Площадь')
     is_lux = models.BooleanField(verbose_name='Люкс')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
     price = models.FloatField(null=False, verbose_name='Цена')
     booked_person = models.ManyToManyField(User, through='Booking', related_name='booked_room')
+    image = models.ImageField(upload_to='hotel/photos/%Y/%m/%d/', blank=True, verbose_name='Изображение')
 
     def __str__(self):
         return f'Номер {self.number}'
@@ -18,6 +19,8 @@ class Room(models.Model):
     class Meta:
         verbose_name = 'Номер'
         verbose_name_plural = 'Номера'
+        ordering = ('number', )
+
 
 
 class RoomType(models.Model):
@@ -76,19 +79,61 @@ class RenterMessage(models.Model):
         verbose_name_plural = 'Сообщения'
 
 
-class Rating(models.Model):
-    service_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-                                          verbose_name='Качество обслуживания')
-    cleanness = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-                                    verbose_name='Чистота')
-    friendliness_of_staff = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-                                                verbose_name='Приветливость персонала')
-    equipment_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-                                            verbose_name='Качество оборудования')
-    food_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-                                       verbose_name='Качество еды')
-    location = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-                                   verbose_name='Расположение')
-    territory_condition = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-                                              verbose_name='Состояние прилегающей территории')
-    rating_person = models.OneToOneField(User, null=True, on_delete=models.SET_NULL, related_name='ratings')
+# class Rating(models.Model):
+#     service_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+#                                           verbose_name='Качество обслуживания')
+#     cleanness = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+#                                     verbose_name='Чистота')
+#     friendliness_of_staff = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+#                                                 verbose_name='Приветливость персонала')
+#     equipment_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+#                                             verbose_name='Качество оборудования')
+#     food_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+#                                        verbose_name='Качество еды')
+#     location = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+#                                    verbose_name='Расположение')
+#     territory_condition = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+#                                               verbose_name='Состояние прилегающей территории')
+#     rating_person = models.OneToOneField(User, null=True, on_delete=models.SET_NULL, related_name='ratings')
+
+
+class TypeService(models.Model):
+    class Meta:
+        verbose_name = 'Тип сервиса'
+        verbose_name_plural = 'Типы сервиса'
+
+    title = models.CharField(max_length=50, unique=True, verbose_name='Название')
+    avg_rate = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name='Средний балл'
+    )
+    user = models.ManyToManyField(
+        User,
+        related_name='rated_services',
+        blank=True
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class UserTypeServices(models.Model):
+    class Meta:
+        unique_together = ('user', 'type_service')
+
+    user = models.ForeignKey(
+        User,
+        related_name='rated_type_service',
+        on_delete=models.SET_DEFAULT,
+        default=4
+    )
+    type_service = models.ForeignKey(
+        TypeService,
+        on_delete=models.CASCADE,
+        related_name='rated_type_service'
+    )
+    rate = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+

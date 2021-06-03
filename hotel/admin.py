@@ -1,12 +1,15 @@
 from django.contrib import admin
-from hotel.models import Room, RoomType, Booking, Rating, Rent, RenterMessage
+from hotel.models import Room, RoomType, Booking, Rent, RenterMessage, TypeService
+
+
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('number', 'room_type', 'is_lux')
 
 
 class RenterMessageInline(admin.TabularInline):
     model = RenterMessage
     readonly_fields = ('date', 'text',)
     ordering = ('date',)
-    # list_display = ('date', 'text', 'rent.room')
 
 
 class RentAdmin(admin.ModelAdmin):
@@ -14,8 +17,15 @@ class RentAdmin(admin.ModelAdmin):
     inlines = (RenterMessageInline,)
 
 
-admin.site.register(Room)
+class TypeServiceAdmin(admin.ModelAdmin):
+    exclude = ('user', )
+    readonly_fields = ('avg_rate', )
+    list_display = ('title', 'avg_rate', )
+
+
+admin.site.register(Room,RoomAdmin)
+admin.site.register(RoomType)
 admin.site.register(Booking)
-admin.site.register(Rating)
 admin.site.register(Rent, RentAdmin)
 admin.site.register(RenterMessage)
+admin.site.register(TypeService, TypeServiceAdmin)
