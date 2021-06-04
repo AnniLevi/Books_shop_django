@@ -22,7 +22,6 @@ class Room(models.Model):
         ordering = ('number', )
 
 
-
 class RoomType(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
 
@@ -77,24 +76,6 @@ class RenterMessage(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
-
-
-# class Rating(models.Model):
-#     service_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-#                                           verbose_name='Качество обслуживания')
-#     cleanness = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-#                                     verbose_name='Чистота')
-#     friendliness_of_staff = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-#                                                 verbose_name='Приветливость персонала')
-#     equipment_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-#                                             verbose_name='Качество оборудования')
-#     food_quality = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-#                                        verbose_name='Качество еды')
-#     location = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-#                                    verbose_name='Расположение')
-#     territory_condition = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
-#                                               verbose_name='Состояние прилегающей территории')
-#     rating_person = models.OneToOneField(User, null=True, on_delete=models.SET_NULL, related_name='ratings')
 
 
 class TypeService(models.Model):

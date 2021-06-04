@@ -1,106 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Отзывы об отеле</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container">
-    <a href="{% url 'hotel-page' %}">На главную отеля</a>
-    <form action="{% url 'add-rating' %}" method="POST">
-    {% csrf_token %}
-        <h1>Оставить отзыв</h1>
-        <p>
-            <label for="service_quality">Качество обслуживания: </label>
-            <select size="1" name="service_quality">
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
-        </p>
-        <p>
-            <label for="friendliness_of_staff">Чистота: </label>
-            <select size="1" name="cleanness">
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
-        </p>
-        <p>
-            <label for="friendliness_of_staff">Приветливость персонала: </label>
-            <select size="1" name="friendliness_of_staff">
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
-        </p>
-        <p>
-            <label for="equipment_quality">Качество оборудования: </label>
-            <select size="1" name="equipment_quality">
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
-        </p>
-        <p>
-            <label for="food_quality">Качество еды: </label>
-            <select size="1" name="food_quality">
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
-        </p>
-        <p>
-            <label for="location">Расположение: </label>
-            <select size="1" name="location">
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
-        </p>
-        <p>
-            <label for="territory_condition">Состояние прилегающей территории: </label>
-            <select size="1" name="territory_condition">
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
-        </p>
+{% extends 'hotel/hotel_main.html' %}
 
-        <input type="submit" value="Отправить">
-    </form>
+{% block title %}Поиск номера{% endblock %}
 
-    <hr>
-    <p><b>Отзывы клиентов</b></p>
-    <p>Средняя оценка по категориям:<br>
-    Качество обслуживания - {{ avg_service_quality }}<br>
-    Чистота - {{ avg_cleanness }}<br>
-    Приветливость персонала - {{ avg_friendliness_of_staff }}<br>
-    Качество оборудования - {{ avg_equipment_quality }}<br>
-    Качество еды - {{ avg_food_quality }}<br>
-    Расположение - {{ avg_location }}<br>
-    Состояние прилегающей территории - {{ avg_territory_condition }}<br>
-    </p>
-    <p>Общая средняя оценка отеля: <br>
-    {{ avg_all }}</p>
+{% block content %}
 
-    <hr>
+<table class="table my-5">
+  <thead>
+    <tr>
+      <th scope="col">Общий рейтинг отеля</th>
+      <th scope="col"></th>
+      <th scope="col"><span class="badge bg-secondary float-end">{{ avg_all|floatformat:2 }}</span></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for type in types %}
 
-</div>
-</body>
-</html>
+    <tr>
+      <td>{{ type.title }}</td>
+      <td><div class="rating">
+          {% for i in '12345' %}
+              <a href="{% url 'add-rating' type_id=type.id rate=i %}">{{ i }}</a>
+          {% endfor %}
+      </div>
+      </td>
+      <td><span class="badge bg-secondary float-end">{{ type.avg_rate }}</span></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

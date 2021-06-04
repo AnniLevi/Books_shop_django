@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Avg
+from django.db.models import Count, Avg, Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from hotel.models import Room, Booking, RoomType, TypeService
+from hotel.models import Room, Booking, RoomType, TypeService, UserTypeServices
 from datetime import datetime
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q
@@ -51,35 +51,21 @@ def booking_the_room(request, room_id):
     return redirect('filter-room')
 
 
-# def rating_page(request):
-#     context = Rating.objects.all().aggregate(
-#         avg_service_quality=Avg('service_quality'),
-#         avg_cleanness=Avg('cleanness'),
-#         avg_friendliness_of_staff=Avg('friendliness_of_staff'),
-#         avg_equipment_quality=Avg('equipment_quality'),
-#         avg_food_quality=Avg('food_quality'),
-#         avg_location=Avg('location'),
-#         avg_territory_condition=Avg('territory_condition'),
-#     )
-#     s = 0
-#     for value in context.values():
-#         s += float(value)
-#     avg_all = s / 7
-#     context['avg_all'] = avg_all
-#     return render(request, 'hotel/ratings.html', context=context)
+def rating_page(request):
+    ts = TypeService.objects.all()
+    all_ratings = ts.exclude(avg_rate=None).aggregate(sum_all=Sum('avg_rate'), count_all=Count('avg_rate'))
+    avg_all = all_ratings['sum_all'] / all_ratings['count_all']
+    return render(request, 'hotel/ratings.html', {'types': ts, 'avg_all': avg_all})
 
 
-# @login_required
-# def add_rating(request):
-#     Rating.objects.update_or_create(
-#         rating_person_id=request.user.id,
-#         defaults={'service_quality': request.POST['service_quality'],
-#                   'cleanness': request.POST['cleanness'],
-#                   'friendliness_of_staff': request.POST['friendliness_of_staff'],
-#                   'equipment_quality': request.POST['equipment_quality'],
-#                   'food_quality': request.POST['food_quality'],
-#                   'location': request.POST['location'],
-#                   'territory_condition': request.POST['territory_condition'],
-#                   }
-#     )
-#     return redirect('hotel-rating')
+@login_required
+def add_rating(request, type_id, rate):
+    UserTypeServices.objects.update_or_create(
+        user_id=request.user.id,
+        type_service_id=type_id,
+        defaults={'rate': rate}
+    )
+    ts = TypeService.objects.get(id=type_id)
+    ts.avg_rate = ts.rated_type_service.aggregate(rate=Avg('rate'))['rate']
+    ts.save(update_fields=['avg_rate'])
+    return redirect('hotel-rating', )
