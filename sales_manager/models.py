@@ -1,6 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from datetime import datetime
+
+
+def upload_to(instance, filename):
+    date = datetime.now().strftime('%Y/%m/%d')
+    return f'book_shop/{instance.title}/{date}/{filename}'
 
 
 class Book(models.Model):
@@ -19,9 +25,14 @@ class Book(models.Model):
         blank=True,
         through='UserRateBook'
     )
+    img = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     def __str__(self):
         return self.title
+
+    def delete(self, using=None, keep_parents=False):
+        self.img.delete()
+        super().delete()
 
 
 class UserRateBook(models.Model):

@@ -3,12 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
-
-from sales_manager.models import Book, Comment, UserRateBook
 from django.views import View
-
-from sales_manager.utils import get_books_with_comment
 from django.db.models import Avg
+from sales_manager.models import Book, Comment, UserRateBook
+from sales_manager.utils import get_books_with_comment
+from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from sales_manager.serializers import BookSerializer
 
 
 def main_page(request):
@@ -93,3 +97,10 @@ def add_like_ajax(request):
             com.like.add(request.user)
         return HttpResponse(com.like.count())
     return HttpResponseNotFound('error')
+
+
+class BookListAPIView(ListAPIView):
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]

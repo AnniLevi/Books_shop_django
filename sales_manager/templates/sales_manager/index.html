@@ -1,11 +1,16 @@
 {% extends 'sales_manager/main.html' %}
-
+{% load static %}
 {% block title %}Shop Index{% endblock %}
 
 {% block content %}
+
 <div class="container">
+    <img src="{% static '1557234102-6097.jpg' %}" width="30%">
   <h1>Hello, this is main page</h1><hr>
     {% for book in books %}
+        {% if book.img %}
+            <img src="{{ book.img.url }}" width="20%">
+        {% endif %}
         {% include 'sales_manager/book_view.html' with book=book with_comment=False redirect_url='main-page' %}
     {% endfor %}
 </div>

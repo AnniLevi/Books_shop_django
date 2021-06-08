@@ -1,6 +1,6 @@
 {% extends 'hotel/hotel_main.html' %}
 
-{% block title %}Поиск номера{% endblock %}
+{% block title %}Оценка отеля{% endblock %}
 
 {% block content %}
 
@@ -20,6 +20,7 @@
       <td><div class="rating">
           {% for i in '12345' %}
               <a href="{% url 'add-rating' type_id=type.id rate=i %}">{{ i }}</a>
+
           {% endfor %}
       </div>
       </td>
