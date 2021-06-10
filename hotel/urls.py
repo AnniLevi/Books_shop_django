@@ -8,6 +8,9 @@ urlpatterns = [
     path('room_booking/<int:room_id>/', views.booking_the_room, name='room-booking'),
     path('ratings/', views.rating_page, name='hotel-rating'),
     path('add_rating/<int:type_id>/<int:rate>/', views.add_rating, name='add-rating'),
+    path('profile/', views.profile, name='profile'),
+    path('profile/user_messages/', views.user_messages, name='user-messages'),
+    path('profile/user_messages/add_message/', views.add_message, name='add-message'),
     path('', views.hotel_page, name='hotel-page'),
 ]
 

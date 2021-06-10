@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Avg, Sum
+from django.db.models import Count, Avg, Sum, Subquery
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from hotel.models import Room, Booking, RoomType, TypeService, UserTypeServices
+from hotel.models import Room, Booking, RoomType, TypeService, UserTypeServices, Rent, Message
 from datetime import datetime
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q
@@ -69,3 +69,21 @@ def add_rating(request, type_id, rate):
     ts.avg_rate = ts.rated_type_service.aggregate(rate=Avg('rate'))['rate']
     ts.save(update_fields=['avg_rate'])
     return redirect('hotel-rating', )
+
+
+@login_required()
+def profile(request):
+    booking = Booking.objects.filter(booked_person_id=request.user.id).order_by('date_from')
+    rent_query = Rent.objects.filter(renter=request.user). \
+        prefetch_related('renter').order_by('start_date')
+    return render(request, 'hotel/profile.html', {'booking': booking, 'rent': rent_query})
+
+
+@login_required()
+def user_messages(request):
+    messages = Message.objects.filter(rent__renter=request.user.id)
+    return render(request, 'hotel/user_messages.html', {'messages': messages})
+
+@login_required()
+def add_message(request):
+    pass

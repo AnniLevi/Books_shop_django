@@ -36,14 +36,21 @@
                         <a class="nav-link" href="{% url 'filter-room' %}">Поиск номера</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'hotel-rating' %}">Оценить отель</a>
+                        <a class="nav-link" href="{% url 'hotel-rating' %}">Оценка отеля</a>
                     </li>
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="">Личный кабинет</a>
+                        <a class="nav-link" href="{% url 'profile' %}">Личный кабинет</a>
                     </li>
+                    {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Статистика пользователей</a>
+                        </li>
+                    {% endif %}
+                    {% endif %}
                 </ul>
                 <span class="d-flex">
-      <li class="nav-link disabled" aria-disabled="true">{{ user.username }}</li>
+                    <li class="nav-link disabled" aria-disabled="true">{{ user.username }}</li>
 
                     {% if user.is_authenticated %}
                         <a href="{% url 'logout' %}" class="btn btn-outline-dark">Выход</a>
@@ -51,7 +58,7 @@
                         <a href="{% url 'login' %}" class="btn btn-outline-dark">Войти</a>
                     {% endif %}
 
-      </span>
+                </span>
             </div>
         </div>
     </nav>

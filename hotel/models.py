@@ -63,9 +63,9 @@ class Rent(models.Model):
         verbose_name_plural = 'Проживание'
 
 
-class RenterMessage(models.Model):
+class Message(models.Model):
     date = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
-    rent = models.ForeignKey(Rent, on_delete=models.CASCADE, related_name='messages')
+    rent = models.ForeignKey(Rent, on_delete=models.CASCADE, related_name='messages', default=1)
     # renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages', verbose_name='Клиент')
     # room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages', verbose_name='Номер')
     text = models.TextField(verbose_name='Текст')

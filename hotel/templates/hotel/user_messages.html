@@ -1,0 +1,31 @@
+{% extends 'hotel/hotel_main.html' %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Сообщения</h1>
+
+<form action="{% url 'add-message' %}" method="post">
+  <div class="mb-3">
+    <label for="room_number" class="form-label">Номер отеля</label>
+    <input type="email" class="form-control" id="room_number" aria-describedby="emailHelp">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1">
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+  <button class="btn btn-outline-dark" type="submit">Отправить</button>
+</form>
+<br>
+
+{% for message in messages %}
+    <i>{{ message.date|date:"d.m.Y h:i" }}</i><br>
+    <i>Номер аренды {{ message.rent_id }}</i><br>
+    {{ message.text }}<br><br>
+{% endfor %}
+
+{% endblock %}
