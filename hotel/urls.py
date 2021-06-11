@@ -11,6 +11,8 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/user_messages/', views.user_messages, name='user-messages'),
     path('profile/user_messages/add_message/', views.add_message, name='add-message'),
+    path('user_statistic/', views.user_statistic, name='user-statistic'),
+    path('user_statistic/admin_messages', views.admin_messages, name='admin-messages'),
     path('', views.hotel_page, name='hotel-page'),
 ]
 

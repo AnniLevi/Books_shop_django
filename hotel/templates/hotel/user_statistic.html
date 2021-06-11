@@ -1,0 +1,12 @@
+{% extends 'hotel/hotel_main.html' %}
+
+{% block title %}Статистика пользователей{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Статистика пользователей</h1>
+<br>
+<h3><a href="{% url 'admin-messages' %}">Сообщения</a></h3><br>
+
+{% include 'hotel/_base_statictic.html' %}
+
+{% endblock %}

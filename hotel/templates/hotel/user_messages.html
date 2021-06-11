@@ -23,14 +23,6 @@
 </form>
 <br>
 
-{% for message in messages %}
-    <i>
-        {{ message.date|date:"d.m.Y h:i:s" }}<br>
-        Номер аренды {{ message.rent_id }}<br>
-        Комната {{ message.rent.room_id }}<br>
-        Автор {{ message.author.username }}<br>
-    </i>
-    {{ message.text }}<br><br>
-{% endfor %}
+{% include 'hotel/_base_messages.html' %}
 
 {% endblock %}

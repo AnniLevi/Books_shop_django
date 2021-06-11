@@ -73,10 +73,20 @@ def add_rating(request, type_id, rate):
 
 @login_required()
 def profile(request):
-    booking = Booking.objects.filter(booked_person_id=request.user.id).order_by('date_from')
+    booking = Booking.objects.filter(booked_person_id=request.user.id). \
+        prefetch_related('booked_person').order_by('date_from')
     rent_query = Rent.objects.filter(renter=request.user). \
         prefetch_related('renter').order_by('start_date')
-    return render(request, 'hotel/profile.html', {'booking': booking, 'rent': rent_query})
+    context = {'booking': booking, 'rent': rent_query}
+    return render(request, 'hotel/profile.html', context)
+
+
+@login_required()
+def user_statistic(request):
+    booking = Booking.objects.all().prefetch_related('booked_person').order_by('date_from')
+    rent_query = Rent.objects.all().prefetch_related('renter').order_by('start_date')
+    context = {'booking': booking, 'rent': rent_query}
+    return render(request, 'hotel/user_statistic.html', context)
 
 
 @login_required()
@@ -95,3 +105,8 @@ def add_message(request):
     )
     # messages = Message.objects.filter(rent__renter=request.user.id).select_related('rent', 'author')
     return redirect('user-messages')
+
+@login_required()
+def admin_messages(request):
+    messages = Message.objects.all().order_by('-date').select_related('rent', 'author')
+    return render(request, 'hotel/admin_messages.html', {'messages': messages})

@@ -1,0 +1,50 @@
+<h3>Бронирование отеля</h3>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Комната</th>
+      <th scope="col">Дата заезда</th>
+      <th scope="col">Дата отъезда</th>
+      <th scope="col">На кого бронь</th>
+      <th scope="col">Описание</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for book_item in booking %}
+    <tr>
+      <th scope="row">{{ book_item.room_id }}</th>
+      <td>{{ book_item.date_from }}</td>
+      <td>{{ book_item.date_to }}</td>
+      <td>{{ book_item.booked_person.username }}</td>
+      <td>{{ book_item.description }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br>
+
+<h3>Проживание в отеле</h3>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Комната</th>
+      <th scope="col">Дата заезда</th>
+      <th scope="col">Дата отъезда</th>
+      <th scope="col">Проживающие</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for rent_item in rent %}
+    <tr>
+      <th scope="row">{{ rent_item.room_id }}</th>
+      <td>{{ rent_item.start_date }}</td>
+      <td>{{ rent_item.end_date }}</td>
+      <td>{% for user in rent_item.renter.all %}
+          {{ user.username }},
+          {% endfor %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br>
