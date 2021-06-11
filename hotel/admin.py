@@ -16,9 +16,14 @@ class TypeServiceAdmin(admin.ModelAdmin):
     list_display = ('title', 'avg_rate', )
 
 
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'date', 'rent', 'author', 'text')
+    list_display_links = ('id', 'text')
+
+
 admin.site.register(Room,RoomAdmin)
 admin.site.register(RoomType)
 admin.site.register(Booking)
 admin.site.register(Rent, RentAdmin)
 admin.site.register(TypeService, TypeServiceAdmin)
-admin.site.register(Message)
+admin.site.register(Message, MessageAdmin)

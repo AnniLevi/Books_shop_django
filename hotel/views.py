@@ -81,9 +81,17 @@ def profile(request):
 
 @login_required()
 def user_messages(request):
-    messages = Message.objects.filter(rent__renter=request.user.id)
+    messages = Message.objects.filter(rent__renter=request.user.id).order_by('-date').select_related('rent', 'author')
+    # rent = Rent.objects.filter(renter_id=request.user.id).select_related('messages')
     return render(request, 'hotel/user_messages.html', {'messages': messages})
+
 
 @login_required()
 def add_message(request):
-    pass
+    Message.objects.create(
+        rent_id=request.POST['rent_number'],
+        text=request.POST['text'],
+        author_id=request.user.id
+    )
+    # messages = Message.objects.filter(rent__renter=request.user.id).select_related('rent', 'author')
+    return redirect('user-messages')

@@ -6,25 +6,30 @@
 <h1 class="text-center">Сообщения</h1>
 
 <form action="{% url 'add-message' %}" method="post">
+{% csrf_token %}
   <div class="mb-3">
-    <label for="room_number" class="form-label">Номер отеля</label>
-    <input type="email" class="form-control" id="room_number" aria-describedby="emailHelp">
+    <label for="rent_number">Номер отеля</label>
+    <select name="rent_number" id="room_number" required>
+        {% for message in  messages %}
+        {% ifchanged %}<option value="{{ message.rent_id }}">{{ message.rent_id }}</option>{% endifchanged %}
+        {% endfor %}
+    </select>
   </div>
   <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-  </div>
-  <div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    <label for="text" class="form-label">Текст сообщения:</label>
+    <textarea class="form-control" rows="5" id="text" name="text" required></textarea>
   </div>
   <button class="btn btn-outline-dark" type="submit">Отправить</button>
 </form>
 <br>
 
 {% for message in messages %}
-    <i>{{ message.date|date:"d.m.Y h:i" }}</i><br>
-    <i>Номер аренды {{ message.rent_id }}</i><br>
+    <i>
+        {{ message.date|date:"d.m.Y h:i:s" }}<br>
+        Номер аренды {{ message.rent_id }}<br>
+        Комната {{ message.rent.room_id }}<br>
+        Автор {{ message.author.username }}<br>
+    </i>
     {{ message.text }}<br><br>
 {% endfor %}
 

@@ -69,6 +69,7 @@ class Message(models.Model):
     # renter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages', verbose_name='Клиент')
     # room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages', verbose_name='Номер')
     text = models.TextField(verbose_name='Текст')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1, related_name='user_messages', verbose_name='Автор')
 
     def __str__(self):
         return f'Сообщение {self.id}'
