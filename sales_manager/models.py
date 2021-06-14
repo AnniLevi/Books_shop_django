@@ -1,12 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from datetime import datetime
-
-
-def upload_to(instance, filename):
-    date = datetime.now().strftime('%Y/%m/%d')
-    return f'book_shop/{instance.title}/{date}/{filename}'
+from sales_manager.shortcut import upload_to
 
 
 class Book(models.Model):

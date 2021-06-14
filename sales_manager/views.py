@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
 from rest_framework.response import Response
 
-
+from rest_framework import filters
 
 
 def main_page(request):
@@ -131,8 +131,14 @@ def add_like_ajax(request):
 
 # third variant - GET and POST
 class BookListAPIView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    search_fields = ('title', 'text')
+    ordering_fields = ('id', 'title')
+    ordering = ('-id', )
 
     # def list(self, request, pk=None, **kwargs):
     #     if pk is not None:
