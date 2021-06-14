@@ -1,24 +1,20 @@
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
 from django.views import View
-from django.db.models import Avg
-
-from sales_manager.models import Book, Comment, UserRateBook
-from sales_manager.utils import get_books_with_comment
-from sales_manager.serializers import BookSerializer
-
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, ListCreateAPIView, CreateAPIView, GenericAPIView, UpdateAPIView, \
-    RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
+from django.views.decorators.http import require_http_methods
+from rest_framework import filters
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework import status
+from rest_framework.generics import ListCreateAPIView, GenericAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from rest_framework import filters
+from sales_manager.models import Book, Comment, UserRateBook
+from sales_manager.paginators import MyPagination
+from sales_manager.serializers import BookSerializer
+from sales_manager.utils import get_books_with_comment
 
 
 def main_page(request):
@@ -131,13 +127,14 @@ def add_like_ajax(request):
 
 # third variant - GET and POST
 class BookListAPIView(ListCreateAPIView):
+    pagination_class = MyPagination
     permission_classes = [IsAuthenticated]
     authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
-    queryset = Book.objects.all()
+    queryset = Book.objects
     serializer_class = BookSerializer
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
-    search_fields = ('title', 'text')
-    ordering_fields = ('id', 'title')
+    search_fields = ('title', 'text', 'author__username')
+    ordering_fields = ('id', 'title', 'author__id')
     ordering = ('-id', )
 
     # def list(self, request, pk=None, **kwargs):
