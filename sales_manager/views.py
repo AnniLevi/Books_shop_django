@@ -5,16 +5,20 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.decorators.http import require_http_methods
-from rest_framework import filters
+from django.shortcuts import get_object_or_404
+from rest_framework import filters, status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.generics import ListCreateAPIView, GenericAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from sales_manager.models import Book, Comment, UserRateBook
 from sales_manager.paginators import MyPagination
 from sales_manager.serializers import BookSerializer
 from sales_manager.utils import get_books_with_comment
+from sales_manager.serializers import RateBookSerializer
+
 
 
 def main_page(request):
@@ -167,3 +171,29 @@ class BookUpdateAPIView(RetrieveUpdateDestroyAPIView):
     '''test description'''
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
+
+class AddRateBook(APIView):
+    serializer_class = RateBookSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+
+    def put(self, request):
+        serializer = self.serializer_class(data=request.data)
+        # if not serializer.is_valid():
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # аналогично:
+        serializer.is_valid(raise_exception=True)
+        # query_set_book = Book.objects.filter(id=serializer.data['book_id'])
+        # if not query_set_book.exists():
+        #     return Response({}, status=status.HTTP_404_NOT_FOUND)
+        # аналогично:
+        book = get_object_or_404(Book, id=serializer.data['book_id'])
+        UserRateBook.objects.update_or_create(
+            user_id=request.user.id,
+            book_id=book.id,
+            defaults={"rate": serializer.data['rate']}
+        )
+        book.avg_rate = book.rated_user.aggregate(rate=Avg('rate'))['rate']
+        book.save(update_fields=['avg_rate'])
+        return Response({'avg_rate': book.avg_rate}, status=status.HTTP_201_CREATED)

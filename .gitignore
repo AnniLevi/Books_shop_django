@@ -3,5 +3,4 @@ venv
 /db.sqlite3
 /media
 /hotel/static/
-.jpg
-.png
+/sales_manager/static/*.jpg

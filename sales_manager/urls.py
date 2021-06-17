@@ -12,5 +12,6 @@ urlpatterns = [
     path('show_all_books/', views.BookListAPIView.as_view()),
     path('show_all_books/<int:pk>/', views.BookDetail.as_view()),
     path('update_book/<int:pk>/', views.BookUpdateAPIView.as_view()),
+    path('add_rate_book_api/', views.AddRateBook.as_view()),
     path('', views.main_page, name='main-page')
 ]
