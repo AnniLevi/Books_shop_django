@@ -12,7 +12,7 @@ urlpatterns = [
     path('show_all_books/', views.BookListAPIView.as_view()),
     path('show_all_books/<int:pk>/', views.BookDetail.as_view()),
     path('update_book/<int:pk>/', views.BookUpdateAPIView.as_view()),
-    path('add_rate_book_api/', views.AddRateBook.as_view()),
+    path('add_rate_book_api/', views.AddRateBook.as_view(), name='add-rate-book'),
     path('create_book/', views.BookCreate.as_view(), name='create-book'),
     path('', views.main_page, name='main-page')
 ]
