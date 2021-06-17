@@ -16,7 +16,7 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = ['title', 'text', 'img', 'author', 'id', 'avg_rate']
 
-    my_custom_field = SerializerMethodField()
+    # my_custom_field = SerializerMethodField()
 
     # author_name = CharField(source='author.username')
     # author = AuthorSerializer()
@@ -35,3 +35,9 @@ class RateBookSerializer(serializers.Serializer):
     #     if instance < 0:
     #         raise serializers.ValidationError('rate must be more than 0')
     #     return instance
+
+
+class CreateBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ['title', 'text', 'img', 'author', 'id']
