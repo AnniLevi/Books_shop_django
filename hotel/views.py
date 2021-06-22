@@ -1,11 +1,19 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg, Sum, Subquery
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, GenericAPIView, \
+    CreateAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from hotel.models import Room, Booking, RoomType, TypeService, UserTypeServices, Rent, Message
 from datetime import datetime
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q
+from hotel.serializers import SearchRoomSerializer, RoomSerializer, BookingCreateSerializer, OuterBookingInfoSerializer
 
 
 def hotel_page(request):
@@ -110,3 +118,52 @@ def add_message(request):
 def admin_messages(request):
     messages = Message.objects.all().order_by('-date').select_related('rent', 'author')
     return render(request, 'hotel/admin_messages.html', {'messages': messages})
+
+
+class SearchRoomsAPIView(APIView):
+
+    def post(self, request):
+        search_serializer = SearchRoomSerializer(data=request.data)
+        search_serializer.is_valid(raise_exception=True)
+        start_date = datetime.strptime(search_serializer.data['start_date'], '%Y-%m-%d')
+        end_date = datetime.strptime(search_serializer.data['end_date'], '%Y-%m-%d')
+        room_type = get_object_or_404(RoomType, name=search_serializer.data['room_type'])
+        booked_rooms = Booking.objects.filter(
+            Q(date_from__gte=start_date, date_to__lte=end_date) |
+            Q(date_from__lte=start_date, date_to__gte=end_date) |
+            Q(date_from__gte=start_date, date_from__lte=end_date, date_to__gte=end_date) |
+            Q(date_to__gte=start_date, date_to__lte=end_date, date_from__lte=end_date)
+        )
+        rooms = Room.objects.filter(room_type=room_type).exclude(booked__in=booked_rooms)
+        room_serializer = RoomSerializer(rooms, many=True)
+        return Response(room_serializer.data, status=status.HTTP_201_CREATED)
+
+
+# {"start_date":"2021-06-01", "end_date": "2021-06-10", "room_type": "3-местный"}
+
+
+class RoomDetail(GenericAPIView):
+    queryset = Room.objects
+    serializer_class = RoomSerializer
+
+    def get(self, request, pk):
+        serializer = self.serializer_class(self.get_object())
+        return Response(serializer.data)
+
+
+class BookingCreate(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    serializer_class = BookingCreateSerializer
+
+    def post(self, request, room_id):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        b_obj = Booking.objects.create(
+            room_id=room_id,
+            booked_person_id=request.user.id,
+            **serializer.data
+        )
+        outer_serializer = OuterBookingInfoSerializer(b_obj)
+        return Response(outer_serializer.data, status=status.HTTP_201_CREATED)
+
