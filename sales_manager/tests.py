@@ -7,13 +7,14 @@ from rest_framework.exceptions import ErrorDetail
 from sales_manager.models import Book
 import json
 
+
 class CRUDBookTest(TestCase):
 
     def setUp(self):  # запускается перед стартом каждого теста
         self.user = User.objects.create_user('test name')
 
     def test_create_book(self):
-        self.client.force_login(self.user)
+        self.client.force_login(self.user)  # self.client - клиентская часть
         url = reverse('create-book')  # возвращает урл по имени эндпоинта
         data = {
             'title': 'test title',
@@ -77,8 +78,8 @@ class SetRateBookTest(TestCase):
         data['rate'] = 50
         response = self.client.put(url, data=data, content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, msg=response.data)
+        # check 401 msg
         self.client.logout()
-        # check 403 msg
         data['rate'] = 5
         response = self.client.put(url, data=data, content_type='application/json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

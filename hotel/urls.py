@@ -13,8 +13,10 @@ urlpatterns = [
     path('profile/user_messages/add_message/', views.add_message, name='add-message'),
     path('user_statistic/', views.user_statistic, name='user-statistic'),
     path('user_statistic/admin_messages', views.admin_messages, name='admin-messages'),
-    path('search_room_api/', views.SearchRoomsAPIView.as_view()),
-    path('search_room_api/<int:pk>', views.RoomDetail.as_view()),
-    path('booking_create/<int:room_id>', views.BookingCreate.as_view()),
+    path('search_room_api/', views.SearchRoomsAPIView.as_view(), name='search-room-api'),
+    path('search_room_api/<int:pk>', views.RoomDetail.as_view(), name='room-datail-api'),
+    path('booking_create/<int:room_id>', views.BookingCreate.as_view(), name='booking-create'),
+    path('message_create/', views.MessageCreate.as_view(), name='message-create'),
+    path('message_update/<int:pk>', views.MessageUpdate.as_view(), name='message-update'),
     path('', views.hotel_page, name='hotel-page'),
 ]

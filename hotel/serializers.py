@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.fields import CharField
 
-from hotel.models import Booking, Room, RoomType
+from hotel.models import Booking, Room, RoomType, Message
 
 
 class SearchRoomSerializer(serializers.Serializer):
@@ -44,4 +44,10 @@ class OuterBookingInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
+        fields = '__all__'
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
         fields = '__all__'

@@ -13,7 +13,7 @@ from hotel.models import Room, Booking, RoomType, TypeService, UserTypeServices,
 from datetime import datetime
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q
-from hotel.serializers import SearchRoomSerializer, RoomSerializer, BookingCreateSerializer, OuterBookingInfoSerializer
+from hotel.serializers import SearchRoomSerializer, RoomSerializer, BookingCreateSerializer, OuterBookingInfoSerializer, MessageSerializer
 
 
 def hotel_page(request):
@@ -136,7 +136,7 @@ class SearchRoomsAPIView(APIView):
         )
         rooms = Room.objects.filter(room_type=room_type).exclude(booked__in=booked_rooms)
         room_serializer = RoomSerializer(rooms, many=True)
-        return Response(room_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(room_serializer.data, status=status.HTTP_200_OK)
 
 
 # {"start_date":"2021-06-01", "end_date": "2021-06-10", "room_type": "3-местный"}
@@ -166,4 +166,17 @@ class BookingCreate(APIView):
         )
         outer_serializer = OuterBookingInfoSerializer(b_obj)
         return Response(outer_serializer.data, status=status.HTTP_201_CREATED)
+
+
+class MessageCreate(CreateAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class MessageUpdate(RetrieveUpdateDestroyAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
 

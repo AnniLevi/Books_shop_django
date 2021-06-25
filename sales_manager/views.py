@@ -12,13 +12,11 @@ from rest_framework.generics import ListCreateAPIView, GenericAPIView, RetrieveU
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from sales_manager.models import Book, Comment, UserRateBook
 from sales_manager.paginators import MyPagination
 from sales_manager.serializers import BookSerializer, CreateBookSerializer
 from sales_manager.utils import get_books_with_comment
 from sales_manager.serializers import RateBookSerializer
-
 
 
 def main_page(request):
@@ -139,7 +137,7 @@ class BookListAPIView(ListCreateAPIView):
     filter_backends = (filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('title', 'text', 'author__username')
     ordering_fields = ('id', 'title', 'author__id')
-    ordering = ('-id', )
+    ordering = ('-id',)
 
     # def list(self, request, pk=None, **kwargs):
     #     if pk is not None:
@@ -159,7 +157,6 @@ class BookListAPIView(ListCreateAPIView):
 class BookDetail(GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-
     # lookup_field = 'title'
 
     def get(self, request, pk):
@@ -181,7 +178,7 @@ class BookCreate(CreateAPIView):
 class AddRateBook(APIView):
     serializer_class = RateBookSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
+    authentication_classes = [BasicAuthentication, TokenAuthentication, SessionAuthentication]
 
     def put(self, request):
         serializer = self.serializer_class(data=request.data)
