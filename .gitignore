@@ -4,3 +4,4 @@ venv
 /media
 /hotel/static/
 /sales_manager/static/*.jpg
+/htmlcov/

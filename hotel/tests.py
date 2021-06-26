@@ -211,3 +211,11 @@ class MessageTest(TestCase):
         # check 404 msg
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, msg=response.data)
+
+
+
+# pip install coverage
+# coverage run --source='.' manage.py test
+# coverage run --source='.' manage.py test the-app-you-want-to-test
+# coverage report  - в командной строке
+# coverage html   - в html файл
