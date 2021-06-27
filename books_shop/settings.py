@@ -82,8 +82,15 @@ WSGI_APPLICATION = 'books_shop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get("POSTGRES_DB"),  # получить переменную виртуального окружения
+        # for PostgreSQL:
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
+        'USER': os.environ.get("POSTGRES_USER"),
+        'HOST': 'db',  # имя соответствующего сервиса в docker-compose.yml
+        'PORT': 5432,
     }
 }
 
