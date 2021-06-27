@@ -30,6 +30,7 @@ class RateBookSerializer(serializers.Serializer):
     book_id = serializers.IntegerField()
 
     # def validate_rate(self, instance):
+    # instance - значение поля rate
     #     if instance > 5:
     #         raise serializers.ValidationError('rate must be less than 5')
     #     if instance < 0:

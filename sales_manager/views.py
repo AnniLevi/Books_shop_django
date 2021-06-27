@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from rest_framework import filters, status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.generics import ListCreateAPIView, GenericAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
@@ -19,8 +21,12 @@ from sales_manager.utils import get_books_with_comment
 from sales_manager.serializers import RateBookSerializer
 
 
+# @cache_page(10)
 def main_page(request):
-    query_set = get_books_with_comment()
+    query_set = cache.get('main_page')
+    if query_set is None:
+        query_set = get_books_with_comment()
+        cache.set('main_page', query_set, 30)
     context = {'books': query_set}
     return render(request, 'sales_manager/index.html', context=context)
 
