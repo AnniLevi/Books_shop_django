@@ -87,19 +87,19 @@ DATABASES = {
 
         # for PostgreSQL:
         # запуск через docker-compose.yml
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get("POSTGRES_DB"),  # получить переменную виртуального окружения
-        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
-        'USER': os.environ.get("POSTGRES_USER"),
-        'HOST': 'db',  # имя соответствующего сервиса в docker-compose.yml
-        'PORT': 5432,
-
         # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        # 'NAME': 'django_db',
-        # 'PASSWORD': 'useruser',
-        # 'USER': 'admin',
-        # 'HOST': 'localhost',
+        # 'NAME': os.environ.get("POSTGRES_DB"),  # получить переменную виртуального окружения
+        # 'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
+        # 'USER': os.environ.get("POSTGRES_USER"),
+        # 'HOST': 'db',  # имя соответствующего сервиса в docker-compose.yml
         # 'PORT': 5432,
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'django_db',
+        'PASSWORD': 'useruser',
+        'USER': 'admin',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 
