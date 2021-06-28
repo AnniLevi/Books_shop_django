@@ -82,17 +82,17 @@ WSGI_APPLICATION = 'books_shop.wsgi.application'
 
 DATABASES = {
     'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': BASE_DIR / 'db.sqlite3',
+       # 'ENGINE': 'django.db.backends.sqlite3',
+       # 'NAME': BASE_DIR / 'db.sqlite3',
 
         # for PostgreSQL:
         # запуск через docker-compose.yml
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        # 'NAME': os.environ.get("POSTGRES_DB"),  # получить переменную виртуального окружения
-        # 'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
-        # 'USER': os.environ.get("POSTGRES_USER"),
-        # 'HOST': 'db',  # имя соответствующего сервиса в docker-compose.yml
-        # 'PORT': 5432,
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get("POSTGRES_DB"),  # получить переменную виртуального окружения
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
+        'USER': os.environ.get("POSTGRES_USER"),
+        'HOST': 'db',  # имя соответствующего сервиса в docker-compose.yml
+        'PORT': 5432,
 
         # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
         # 'NAME': 'django_db',
@@ -164,17 +164,17 @@ REST_FRAMEWORK = {
 
 
 # # кэширование в БД:
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'my_cache_table',
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',  # драйвер
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
 
 # кэширование в файловую систему:
 # CACHES = {
 #     'default': {
-#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',  # драйвер
 #         'LOCATION': 'django_cache',
         # 'TIMEOUT': 60,  # макс время кэша
         # 'OPTIONS': {
@@ -182,3 +182,11 @@ CACHES = {
         # }
 #     }
 # }
+
+# for Redis:
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",  # драйвер
+        "LOCATION": "redis://cache:6379/0",  # драйвер:хост(имя сервиса в docker-compose):порт(дефолтный)
+    }
+}
