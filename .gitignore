@@ -2,8 +2,6 @@ venv
 .idea
 /db.sqlite3
 /media
-/hotel/static/
-/sales_manager/static/*.jpg
 /htmlcov/
 /.coverage
 /django_cache/
