@@ -82,8 +82,8 @@ WSGI_APPLICATION = 'books_shop.wsgi.application'
 
 DATABASES = {
     'default': {
-       # 'ENGINE': 'django.db.backends.sqlite3',
-       # 'NAME': BASE_DIR / 'db.sqlite3',
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
 
         # for PostgreSQL:
         # запуск через docker-compose.yml
@@ -94,12 +94,12 @@ DATABASES = {
         # 'HOST': 'db',  # имя соответствующего сервиса в docker-compose.yml
         # 'PORT': 5432,
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django_db',
-        'PASSWORD': 'useruser',
-        'USER': 'admin',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': 'django_db',
+        # 'PASSWORD': 'useruser',
+        # 'USER': 'admin',
+        # 'HOST': 'localhost',
+        # 'PORT': 5432,
     }
 }
 
